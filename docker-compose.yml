@@ -1,0 +1,19 @@
+version: '3.9'
+networks:
+  app_network:
+services:
+  db:
+    container_name: postgres_db
+    build: ./db_data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+
+  #web:
+  #  build: .
+  #  command: python app.py
+  #  volumes:
+  #    - .:/Flask
+  #  depends_on:
+  #    - db
