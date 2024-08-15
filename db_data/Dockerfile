@@ -1,4 +1,4 @@
-FROM postgres:latest
+FROM postgres:16.4
 
 
 ## Had issues with running inside docker compose file so decided to create a db with his own dockerfile
