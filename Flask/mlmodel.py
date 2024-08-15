@@ -18,7 +18,7 @@ def predict(new_passengers):
     new_pipeline = Pipeline([
         ('preprocessor', new_preprocessor),
         ('classifier', loaded_pipeline.named_steps['classifier'])
-    ])
+    ], memory= None)
     
     new_passengers_df = pd.DataFrame(new_passengers)
     new_passengers_df['PassengerId'] = range(1310, 1310 + len(new_passengers_df))
