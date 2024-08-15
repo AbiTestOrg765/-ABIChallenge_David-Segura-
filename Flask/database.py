@@ -30,47 +30,48 @@ class Log(Base):
     content = Column(String)
     response = Column(String)
 
-def create_user(userName, password, newUserName, newPassword):
+def create_user(user_name, password, new_user_name, new_password):
     engine = create_engine(f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}")
     Session = sessionmaker(bind=engine)  
 
     session = Session()
 
     # Verify existing user
-    existing_user = session.query(User).filter_by(username=userName, password=password).first()
+    existing_user = session.query(User).filter_by(username=user_name, password=password).first()
     userId= existing_user.userid
     if not existing_user:
         # Handle invalid credentials
         return False
 
     # Create new user
-    new_user = User(username=newUserName, password=newPassword)
+    new_user = User(username=new_user_name, password=new_password)
     session.add(new_user)
     session.commit()
     session.close()
     return userId
 
-def authenticate_user(userName, password):
+def authenticate_user(user_name, password):
     engine = create_engine(f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}")
     Session = sessionmaker(bind=engine)  
 
     session = Session()
-    existing_user = session.query(User).filter_by(username=userName, password=password).first()
-    userId= existing_user.userid
+    existing_user = session.query(User).filter_by(username=user_name, password=password).first()
+    user_id= existing_user.userid
     if not existing_user:
         # Handle invalid credentials
         return False
     else:
-        return userId
-def create_log(userId, requestType, content, response):
+        return user_id
+
+def create_log(user_id, request_type, content, response):
     engine = create_engine(f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}")
     Session = sessionmaker(bind=engine)  
 
     session = Session()
     new_log = Log(
-        userid=userId,
+        userid=user_id,
         date=datetime.datetime.now(),
-        requesttype=requestType,
+        requesttype=request_type,
         content=json.dumps(content),
         response=json.dumps(response)
     )
