@@ -10,7 +10,7 @@ def create_user_route():
     password = data.get('password')
     new_user_name = data.get('newUserName')
     new_password = data.get('newPassword')
-    userid = create_user(userName, password, newUserName, newPassword)
+    userid = create_user(user_name, password, new_user_name, new_password)
     if userid:
         response = {'message': 'User created successfully'}
         create_log(userid, "POST", data, response)
