@@ -32,30 +32,30 @@ class Log(Base):
 
 def create_user(user_name, password, new_user_name, new_password):
     engine = create_engine(f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}")
-    Session = sessionmaker(bind=engine)  
+    session = sessionmaker(bind=engine)  
 
-    session = Session()
+    session_user = session()
 
     # Verify existing user
-    existing_user = session.query(User).filter_by(username=user_name, password=password).first()
-    userId= existing_user.userid
+    existing_user = session_user.query(User).filter_by(username=user_name, password=password).first()
+    user_id= existing_user.userid
     if not existing_user:
         # Handle invalid credentials
         return False
 
     # Create new user
     new_user = User(username=new_user_name, password=new_password)
-    session.add(new_user)
-    session.commit()
-    session.close()
-    return userId
+    session_user.add(new_user)
+    session_user.commit()
+    session_user.close()
+    return user_id
 
 def authenticate_user(user_name, password):
     engine = create_engine(f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}")
-    Session = sessionmaker(bind=engine)  
+    session = sessionmaker(bind=engine)  
 
-    session = Session()
-    existing_user = session.query(User).filter_by(username=user_name, password=password).first()
+    session_user = session()
+    existing_user = session_user.query(User).filter_by(username=user_name, password=password).first()
     user_id= existing_user.userid
     if not existing_user:
         # Handle invalid credentials
@@ -65,9 +65,9 @@ def authenticate_user(user_name, password):
 
 def create_log(user_id, request_type, content, response):
     engine = create_engine(f"postgresql://{db_config['user']}:{db_config['password']}@{db_config['host']}:{db_config['port']}/{db_config['database']}")
-    Session = sessionmaker(bind=engine)  
+    session = sessionmaker(bind=engine)  
 
-    session = Session()
+    session_log = session()
     new_log = Log(
         userid=user_id,
         date=datetime.datetime.now(),
@@ -75,6 +75,6 @@ def create_log(user_id, request_type, content, response):
         content=json.dumps(content),
         response=json.dumps(response)
     )
-    session.add(new_log)
-    session.commit()
-    session.close()
+    session_log.add(new_log)
+    session_log.commit()
+    session_log.close()
