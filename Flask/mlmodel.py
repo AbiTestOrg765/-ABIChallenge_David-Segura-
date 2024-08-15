@@ -29,9 +29,9 @@ def predict(new_passengers):
     preds = new_pipeline.predict(new_test)
     ids = new_test['PassengerId']
 
-    PredictionDF = pd.DataFrame({'PassengerId' : ids, 'Survived' : preds})
+    prediction_df = pd.DataFrame({'PassengerId' : ids, 'Survived' : preds})
 
-    last_five = PredictionDF.tail(number_new_passengers)
+    last_five = prediction_df.tail(number_new_passengers)
     last_five_dict = last_five.to_dict('records')
     json_data = json.dumps(last_five_dict)
     return json_data
