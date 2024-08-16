@@ -8,7 +8,7 @@ from .preprocess import pre # Import pre processing function
 
 warnings.filterwarnings("ignore")
 
-class Titanic_model:
+class TitanicModel:
     def __init__(self):
         """
         Loads and creates the new pipeline to run the model
@@ -17,7 +17,7 @@ class Titanic_model:
             # Loads the pickle object
             loaded_pipeline = pickle.load(f)
             # loads the test dataset
-            test = pd.read_csv('test.csv')
+            self.test = pd.read_csv('test.csv')
 
         # Creates a new Pre processing part.
         new_preprocessor = FunctionTransformer(pre, validate=False)
@@ -48,7 +48,7 @@ class Titanic_model:
         new_passengers_df['PassengerId'] = range(1310, 1310 + len(new_passengers_df))
         new_passengers_df['Fare'] = pd.to_numeric(new_passengers_df['Fare'], errors='coerce')
         new_passengers_df['Age'] = pd.to_numeric(new_passengers_df['Age'], errors='coerce')
-        new_test = pd.concat([test, new_passengers_df], ignore_index=True)
+        new_test = pd.concat([self.test, new_passengers_df], ignore_index=True)
 
         # Runs the model
         preds = self.new_pipeline.predict(new_test)
