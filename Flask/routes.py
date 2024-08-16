@@ -1,20 +1,33 @@
 from flask import Blueprint, request, jsonify
-from .database import create_user, create_log, authenticate_user
-from .mlmodel import predict
+from .database import Database
+from .mlmodel import Titanic_model
 routes_blueprint = Blueprint('routes', __name__)
 
 INVALID_CREDENTIALS_ERROR = {'message': 'User created successfully'}
 
 @routes_blueprint.route('/newuser', methods=['POST'])
 def create_user_route():
+    """This endpoint is used to create new users for the api
+    ----
+    POST:
+        description: creates a new user 
+        responses:
+            201:
+            content:
+                application/json:
+                schema: {'status': 'OK'}
+    """
     data = request.get_json()
+
     user_name = data.get('userName')
     password = data.get('password')
     new_user_name = data.get('newUserName')
     new_password = data.get('newPassword')
-    userid = create_user(user_name, password, new_user_name, new_password)
+
+    database = Database()
+    userid = database.create_user(user_name, password, new_user_name, new_password)
     if userid:
-        create_log(userid, "POST", data, INVALID_CREDENTIALS_ERROR)
+        database.create_log(userid,'/newuser', "POST", data, INVALID_CREDENTIALS_ERROR)
         return jsonify(INVALID_CREDENTIALS_ERROR), 201
     else:
         response = jsonify({'message': 'Invalid credentials'}), 401
@@ -22,32 +35,68 @@ def create_user_route():
 
 @routes_blueprint.route('/predict_group_survival', methods=['GET'])
 def predictsurvival():
+    """This endpoint is used to predict the survival of a group of passengers 
+    ----
+    GET:
+        description: returns a group of survival predictions
+        responses:
+            201:
+            content:
+                application/json:
+                schema: [{{'Passenger Name' : name, 'Survived' : True/False}}]
+    """
     data = request.get_json()
     user_name = data.get('userName')
     password = data.get('password')
     passengers = data.get('passengers')
-    user_id = authenticate_user(user_name, password)
+
+    database = Database()
+    user_id = database.authenticate_user(user_name, password)
     if not user_id:
         response = jsonify(INVALID_CREDENTIALS_ERROR), 401
         return response
-    response = predict(passengers)
-    create_log(user_id, "GET", data, response)
+    titanic_model = Titanic_model()
+    response = titanic_model.predict(passengers)
+    database.create_log(user_id,'/predict_group_survival', "GET", data, response)
     return jsonify(response), 201
 
 @routes_blueprint.route('/predict_individual_survival', methods=['GET'])
 def predictsurvival_individual():
+    """This endpoint is used to predict one single passenger 
+    ----
+    GET:
+        description: returns a prediction of survival
+        responses:
+            201:
+            content:
+                application/json:
+                schema: [{{'Passenger Name' : name, 'Survived' : True/False}}]
+    """
     data = request.get_json()
     user_name = data.get('userName')
     password = data.get('password')
     passenger = data.get('passengers')
-    user_id = authenticate_user(user_name, password)
+    
+    database = Database()
+    user_id = database.authenticate_user(user_name, password)
     if not user_id:
         response = jsonify(INVALID_CREDENTIALS_ERROR), 401
         return response
-    response = predict([passenger])
-    create_log(user_id, "GET", data, response)
+    titanic_model = Titanic_model()
+    response = titanic_model.predict([passenger])
+    
+    database.create_log(user_id, '/predict_individual_survival', "GET", data, response)
     return jsonify(response), 201
 
 @routes_blueprint.route('/health')
 def healthcheck():
+    """This route is used to check the stability of the flask application
+    ----
+    description: returns status: OK, 200 if api is up
+    responses:
+        200:
+          content:
+            application/json:
+              schema: {'status': 'OK'}
+    """
     return {'status': 'OK'}, 200
