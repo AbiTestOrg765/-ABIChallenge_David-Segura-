@@ -15,7 +15,7 @@ class User(Base):
 class Log(Base):
     __tablename__ = 'logs'
     log_id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.userid'))
+    user_id = Column(Integer, ForeignKey('users.user_id'))
     date = Column(DateTime)
     end_point = Column(String)
     request_type= Column(String)
@@ -51,14 +51,14 @@ class Database:
         
         """
         # Verify existing user
-        existing_user = self.session.query(User).filter_by(username=user_name, password=password).first()
-        user_id= existing_user.userid
+        existing_user = self.session.query(User).filter_by(user_name=user_name, password=password).first()
+        user_id= existing_user.user_id
         if not existing_user:
             # Handle invalid credentials
             return False
 
         # Create new user
-        new_user = User(username=new_user_name, password=new_password)
+        new_user = User(user_name=new_user_name, password=new_password)
         self.session.add(new_user)
         self.session.commit()
         self.session.close()
@@ -73,13 +73,13 @@ class Database:
             user_id (array): The Id of the user that created the new account
         
         """
-        existing_user = self.session.query(User).filter_by(username=user_name, password=password).first()
-        user_id= existing_user.userid
+        existing_user = self.session.query(User).filter_by(user_name=user_name, password=password).first()
         if not existing_user:
             # Handle invalid credentials
             return False
         else:
             #Return user id
+            user_id= existing_user.user_id 
             return user_id
 
     def create_log(self, user_id, end_point, request_type, content, response):
@@ -94,9 +94,9 @@ class Database:
         """
         # Creates new log object
         new_log = Log(
-            userid=user_id,
+            user_id=user_id,
             date=datetime.datetime.now(),
-            requesttype=request_type,
+            request_type=request_type,
             end_point = end_point,
             content=json.dumps(content),
             response=json.dumps(response)

@@ -6,7 +6,7 @@ CREATE TABLE users (
 
 CREATE TABLE logs (
   log_id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(userId),
+  user_id INTEGER REFERENCES users(user_id),
   date DATE NOT NULL,
   end_point TEXT NOT NULL,
   request_type TEXT NOT NULL,
