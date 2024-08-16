@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .database import Database
-from .mlmodel import Titanic_model
+from .mlmodel import TitanicModel
 routes_blueprint = Blueprint('routes', __name__)
 
 INVALID_CREDENTIALS_ERROR = {'message': 'User created successfully'}
@@ -55,7 +55,7 @@ def predictsurvival():
     if not user_id:
         response = jsonify(INVALID_CREDENTIALS_ERROR), 401
         return response
-    titanic_model = Titanic_model()
+    titanic_model = TitanicModel()
     response = titanic_model.predict(passengers)
     database.create_log(user_id,'/predict_group_survival', "GET", data, response)
     return jsonify(response), 201
@@ -82,7 +82,7 @@ def predictsurvival_individual():
     if not user_id:
         response = jsonify(INVALID_CREDENTIALS_ERROR), 401
         return response
-    titanic_model = Titanic_model()
+    titanic_model = TitanicModel()
     response = titanic_model.predict([passenger])
     
     database.create_log(user_id, '/predict_individual_survival', "GET", data, response)
