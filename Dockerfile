@@ -7,6 +7,12 @@ WORKDIR /Flask
 # Copy the requirements.txt file
 COPY requirements.txt ./
 
+# Copy the test dataset file
+COPY test.csv ./
+
+# Copy the pickle file with model
+COPY Titanic_pipeline_model_nopre.pkl ./
+
 # Install dependencies listed in requirements.txt
 RUN pip install -r requirements.txt
 
