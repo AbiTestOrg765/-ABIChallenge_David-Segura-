@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint
 from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect
 
 def create_app():
     app = Flask(__name__)
