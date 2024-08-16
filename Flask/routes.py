@@ -3,7 +3,7 @@ from .database import Database
 from .mlmodel import TitanicModel
 routes_blueprint = Blueprint('routes', __name__)
 
-INVALID_CREDENTIALS_ERROR = {'message': 'User created successfully'}
+INVALID_CREDENTIALS_ERROR = {'message': 'Invalid credentials'}
 
 @routes_blueprint.route('/newuser', methods=['POST'])
 def create_user_route():
@@ -27,10 +27,11 @@ def create_user_route():
     database = Database()
     userid = database.create_user(user_name, password, new_user_name, new_password)
     if userid:
-        database.create_log(userid,'/newuser', "POST", data, INVALID_CREDENTIALS_ERROR)
-        return jsonify(INVALID_CREDENTIALS_ERROR), 201
+        response = {'message': 'User created successfully'}
+        database.create_log(userid,'/newuser', "POST", data, response)
+        return jsonify(response), 201
     else:
-        response = jsonify({'message': 'Invalid credentials'}), 401
+        response = jsonify(INVALID_CREDENTIALS_ERROR), 401
         return response
 
 @routes_blueprint.route('/predict_group_survival', methods=['GET'])
