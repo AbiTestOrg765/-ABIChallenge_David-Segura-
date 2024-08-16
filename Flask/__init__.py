@@ -1,9 +1,9 @@
 from flask import Flask, Blueprint
 from flask_cors import CORS
-import logging
+
 def create_app():
     app = Flask(__name__)
-    csrf = CSRFProtect()
+    csrf = CSRFProtect() #Ebabke CSRF Protection
     csrf.init_app(app)
     CORS(app)  # Enable CORS for development
 
