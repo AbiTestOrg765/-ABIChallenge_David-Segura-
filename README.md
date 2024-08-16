@@ -1,5 +1,4 @@
 # -ABIChallenge_David-Segura-
-## Please note that this project is still in development I need to modify the endpoints but besides that documentation the project is done
 ## Proposed architecture
 ![ABIChalenge](https://github.com/user-attachments/assets/464fb019-0c09-44ad-95c5-3b8f4628340b)
 
@@ -37,20 +36,21 @@ In this case I decided to select one of the [Titanic competition](https://www.ka
 
 *Predict individual survival*
 
-``curl --location --request GET 'localhost:5000/predict_group_survival' \
+``curl --location --request GET 'localhost:5000/predict_individual_survival' \
 --header 'Content-Type: application/json' \
 --data '{
 "userName":"david" ,
 "password": "just_password",
-"passengers": [{"Pclass": "3", "Name": "Willer, Mr. Aaron (Abi Weller\")\"", "Sex": "male", "Age": "", "SibSp": "0", "Parch": "0", "Ticket": "3410", "Fare": "8.7125", "Cabin": "", "Embarked": "S"}, {"Pclass": "3", "Name": "Willer, Mr. Aaron (Abi Weller\")\"", "Sex": "male", "Age": "", "SibSp": "0", "Parch": "0", "Ticket": "3410", "Fare": "8.7125", "Cabin": "", "Embarked": "S"}]
+"passenger": {"Pclass": "3", "Name": "Willer, Mr. Aaron (Abi Weller\")\"", "Sex": "male", "Age": "", "SibSp": "0", "Parch": "0", "Ticket": "3410", "Fare": "8.7125", "Cabin": "", "Embarked": "S"}
 }'``
 
 *Create new user*
 
-``curl --location --request GET 'localhost:5000/predict_group_survival' \
+``curl --location --request POST 'localhost:5000/newuser' \
 --header 'Content-Type: application/json' \
 --data '{
 "userName":"david" ,
 "password": "just_password",
-"passengers": [{"Pclass": "3", "Name": "Willer, Mr. Aaron (Abi Weller\")\"", "Sex": "male", "Age": "", "SibSp": "0", "Parch": "0", "Ticket": "3410", "Fare": "8.7125", "Cabin": "", "Embarked": "S"}, {"Pclass": "3", "Name": "Willer, Mr. Aaron (Abi Weller\")\"", "Sex": "male", "Age": "", "SibSp": "0", "Parch": "0", "Ticket": "3410", "Fare": "8.7125", "Cabin": "", "Embarked": "S"}]
+"newUserName":"david" ,
+"newPassword": "just_password"
 }'``
